@@ -13,13 +13,27 @@ struct TimeGridView: View {
         VStack(spacing: 0) {
             header
             Divider()
-            ScrollView {
-                ZStack(alignment: .topLeading) {
-                    hourRows
-                    nowIndicator
+            ScrollViewReader { proxy in
+                ScrollView {
+                    ZStack(alignment: .topLeading) {
+                        hourRows
+                        nowIndicator
+                    }
+                }
+                .onAppear {
+                    DispatchQueue.main.async {
+                        proxy.scrollTo(initialScrollHour, anchor: .center)
+                    }
                 }
             }
         }
+    }
+
+    /// Al abrir, la rejilla se posiciona en la hora actual en vez de en la
+    /// medianoche. Si el día de hoy no está a la vista, arranca en la mañana.
+    private var initialScrollHour: Int {
+        guard days.contains(where: { math.isToday($0) }) else { return 8 }
+        return math.calendar.component(.hour, from: Date())
     }
 
     private var header: some View {
@@ -52,13 +66,15 @@ struct TimeGridView: View {
                         .frame(width: gutterWidth, alignment: .trailing)
                         .padding(.trailing, 6)
                         .offset(y: -6)
-                    ForEach(days, id: \.self) { _ in
-                        Color.clear
+                    ForEach(days, id: \.self) { day in
+                        Rectangle()
+                            .fill(math.isToday(day) ? GoogleCalendarColors.todayColumn : Color.clear)
                             .frame(maxWidth: .infinity, maxHeight: .infinity)
                             .border(GoogleCalendarColors.gridLine, width: 0.5)
                     }
                 }
                 .frame(height: hourHeight)
+                .id(hour)
             }
         }
     }

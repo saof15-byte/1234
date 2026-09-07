@@ -6,6 +6,7 @@ import SwiftUI
 enum GoogleCalendarColors {
     static let accent = Color(red: 0x1A / 255, green: 0x73 / 255, blue: 0xE8 / 255)
     static let nowIndicator = Color(red: 0xEA / 255, green: 0x43 / 255, blue: 0x35 / 255)
+    static let todayColumn = Color(red: 0x1A / 255, green: 0x73 / 255, blue: 0xE8 / 255).opacity(0.06)
     static let gridLine = Color(nsColor: .separatorColor)
 
     /// Colores de calendario/etiqueta al estilo de los "chips" de Google Calendar.

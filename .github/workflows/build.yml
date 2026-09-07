@@ -18,8 +18,14 @@ jobs:
             -destination 'platform=macOS' \
             -configuration Debug \
             build
-      - name: Check the app bundle has an identifier
+      - name: Check the app bundle identity
         run: |
           APP=$(find ~/Library/Developer/Xcode/DerivedData -name 'UnifiedCalendar.app' -type d | head -1)
           echo "App bundle: $APP"
-          /usr/libexec/PlistBuddy -c 'Print :CFBundleIdentifier' "$APP/Contents/Info.plist"
+          PLIST="$APP/Contents/Info.plist"
+          /usr/libexec/PlistBuddy -c 'Print :CFBundleIdentifier' "$PLIST"
+          REGION=$(/usr/libexec/PlistBuddy -c 'Print :CFBundleDevelopmentRegion' "$PLIST")
+          echo "Development region: $REGION"
+          # La app muestra fechas en el idioma del sistema solo si el bundle
+          # declara español; en inglés los días salían como SUN/MON/TUE.
+          test "$REGION" = "es"
