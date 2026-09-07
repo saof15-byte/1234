@@ -2,6 +2,8 @@
 
 Cada fase deja algo que se puede correr y probar, para ir viendo avance real.
 
+**Nota de orden:** la Fase 2 se hizo antes que la Fase 1, porque la Fase 1 depende de credenciales de Google que solo el usuario puede crear, mientras que las vistas de calendario no dependen de nada externo.
+
 ## Fase 0 — Setup
 - Crear proyecto Xcode con la configuración definida en [OPEN_QUESTIONS.md](OPEN_QUESTIONS.md) (macOS mínimo, bundle id, firma).
 - Estructura de carpetas base (ver [ARCHITECTURE.md](ARCHITECTURE.md)).

@@ -2,7 +2,7 @@
 
 App nativa de macOS (Swift + SwiftUI) que reemplaza la falta de una app oficial de Google Calendar en Mac: unifica múltiples cuentas de Google (Calendar + Tasks) y de Microsoft (Outlook Calendar + To Do) en una sola interfaz visualmente muy similar a Google Calendar, con consumo de batería/CPU muy bajo como requisito no negociable.
 
-Estado actual: Fase 0 (setup) — hay un shell de UI mínimo que corre, sin datos reales ni sincronización todavía.
+Estado actual: Fase 2 — vistas de día/semana/mes funcionando con fechas reales y navegación. Todavía sin cuentas conectadas ni sincronización.
 
 ## Cómo correrlo
 
@@ -13,7 +13,9 @@ No requiere cuenta de Apple Developer para esto — con tu Apple ID gratuito alc
 
 ## Cómo vamos a trabajar
 
-Yo (Claude) estoy escribiendo este código desde un contenedor Linux, sin Xcode ni un Mac real disponible acá — no puedo compilar ni correr la app para verificarla antes de que tú la abras. Voy a escribir el código con cuidado, pero el ciclo real es: yo escribo → tú lo corres en Xcode en tu Mac → si algo no compila o se ve mal, me pegas el error o una captura y lo corrijo. Es normal que haga falta alguna vuelta extra la primera vez que abras el proyecto.
+Yo (Claude) escribo este código desde un contenedor Linux, sin Xcode ni un Mac disponible. Para no depender de que tú seas mi compilador, cada push se compila con `swift build` en un runner de macOS de GitHub Actions (ver `.github/workflows/build.yml`) y yo leo los errores de ahí.
+
+Lo que CI no puede juzgar es cómo se *ve* la app. Para eso sí te necesito: abrirla en Xcode y decirme qué ajustar (colores, espaciados, proporciones).
 
 ## Documentación
 

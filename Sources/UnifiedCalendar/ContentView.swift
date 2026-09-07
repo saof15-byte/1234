@@ -1,83 +1,99 @@
 import SwiftUI
 
 struct ContentView: View {
-    private let placeholderCalendars: [(name: String, color: Color)] = [
-        ("Personal", GoogleCalendarColors.eventPalette[5]),
-        ("Trabajo", GoogleCalendarColors.eventPalette[3]),
-        ("Tareas", GoogleCalendarColors.eventPalette[2]),
-    ]
+    @State private var mode: CalendarViewMode = .week
+    @State private var anchor = Date()
+
+    private let math = CalendarMath()
 
     var body: some View {
         NavigationSplitView {
-            SidebarView(calendars: placeholderCalendars)
+            SidebarView(anchor: $anchor, math: math)
+                .navigationSplitViewColumnWidth(min: 220, ideal: 240, max: 320)
         } detail: {
-            WeekGridView()
+            calendarView
+                .navigationTitle(math.title(for: mode, anchor: anchor))
+                .toolbar { toolbarContent }
         }
     }
+
+    @ViewBuilder
+    private var calendarView: some View {
+        switch mode {
+        case .day:
+            TimeGridView(days: [anchor], math: math)
+        case .week:
+            TimeGridView(days: math.daysInWeek(containing: anchor), math: math)
+        case .month:
+            MonthGridView(anchor: anchor, math: math)
+        }
+    }
+
+    @ToolbarContentBuilder
+    private var toolbarContent: some ToolbarContent {
+        ToolbarItemGroup {
+            Button("Hoy") { anchor = Date() }
+            Button { shift(-1) } label: { Image(systemName: "chevron.left") }
+            Button { shift(1) } label: { Image(systemName: "chevron.right") }
+            Picker("Vista", selection: $mode) {
+                ForEach(CalendarViewMode.allCases) { mode in
+                    Text(mode.title).tag(mode)
+                }
+            }
+            .pickerStyle(.segmented)
+        }
+    }
+
+    private func shift(_ value: Int) {
+        if let next = math.calendar.date(byAdding: mode.step, value: value, to: anchor) {
+            anchor = next
+        }
+    }
+}
+
+/// Calendarios de ejemplo para ver la forma de la barra lateral. Se reemplazan
+/// por los calendarios reales de cada cuenta en la Fase 3.
+private struct CalendarSource: Identifiable {
+    let id = UUID()
+    let name: String
+    let color: Color
 }
 
 private struct SidebarView: View {
-    let calendars: [(name: String, color: Color)]
+    @Binding var anchor: Date
+    let math: CalendarMath
+
+    private let sources = [
+        CalendarSource(name: "Personal", color: GoogleCalendarColors.eventPalette[5]),
+        CalendarSource(name: "Trabajo", color: GoogleCalendarColors.eventPalette[3]),
+        CalendarSource(name: "Tareas", color: GoogleCalendarColors.eventPalette[2]),
+    ]
 
     var body: some View {
-        List {
-            Section("Cuentas") {
-                Text("Agrega tu primera cuenta de Google en la Fase 1")
-                    .foregroundStyle(.secondary)
-                    .font(.callout)
-            }
-            Section("Mis calendarios") {
-                ForEach(calendars, id: \.name) { calendar in
-                    Label {
-                        Text(calendar.name)
-                    } icon: {
-                        Circle()
-                            .fill(calendar.color)
-                            .frame(width: 10, height: 10)
-                    }
+        VStack(alignment: .leading, spacing: 0) {
+            MiniMonthView(anchor: $anchor, math: math)
+                .padding(12)
+            Divider()
+            List {
+                Section("Cuentas") {
+                    Text("Sin cuentas conectadas")
+                        .font(.callout)
+                        .foregroundStyle(.secondary)
                 }
-            }
-        }
-        .navigationTitle("Calendario Unificado")
-        .frame(minWidth: 220)
-    }
-}
-
-private struct WeekGridView: View {
-    private let days = ["Lun", "Mar", "Mié", "Jue", "Vie", "Sáb", "Dom"]
-    private let hours = Array(0..<24)
-
-    var body: some View {
-        ScrollView {
-            VStack(spacing: 0) {
-                HStack(spacing: 0) {
-                    Color.clear.frame(width: 50)
-                    ForEach(days, id: \.self) { day in
-                        Text(day)
-                            .font(.headline)
-                            .frame(maxWidth: .infinity)
-                            .padding(.vertical, 8)
-                    }
-                }
-                Divider()
-                ForEach(hours, id: \.self) { hour in
-                    HStack(spacing: 0) {
-                        Text(String(format: "%02d:00", hour))
-                            .font(.caption)
-                            .foregroundStyle(.secondary)
-                            .frame(width: 50, alignment: .trailing)
-                            .padding(.trailing, 4)
-                        ForEach(days, id: \.self) { _ in
-                            Rectangle()
-                                .fill(GoogleCalendarColors.background)
-                                .frame(maxWidth: .infinity, minHeight: 40)
-                                .border(GoogleCalendarColors.gridLine, width: 0.5)
+                Section("Mis calendarios") {
+                    ForEach(sources) { source in
+                        Label {
+                            Text(source.name)
+                        } icon: {
+                            Circle()
+                                .fill(source.color)
+                                .frame(width: 10, height: 10)
                         }
                     }
                 }
             }
+            .listStyle(.sidebar)
         }
-        .navigationTitle("Esta semana")
     }
 }
 
