@@ -27,6 +27,7 @@ struct TimeGridView: View {
                 }
             }
         }
+        .background(Theme.background)
     }
 
     /// Al abrir, la rejilla se posiciona en la hora actual en vez de en la
@@ -40,20 +41,21 @@ struct TimeGridView: View {
         HStack(spacing: 0) {
             Color.clear.frame(width: gutterWidth)
             ForEach(days, id: \.self) { day in
-                VStack(spacing: 2) {
+                VStack(spacing: Theme.Spacing.xs) {
                     Text(math.weekdaySymbol(for: day).uppercased())
-                        .font(.caption2)
-                        .foregroundStyle(math.isToday(day) ? GoogleCalendarColors.accent : .secondary)
+                        .font(Theme.Font.weekdayLabel)
+                        .foregroundStyle(math.isToday(day) ? Theme.accent : Theme.textSecondary)
                     Text(String(math.dayNumber(day)))
-                        .font(.title3)
-                        .foregroundStyle(math.isToday(day) ? .white : .primary)
-                        .frame(width: 32, height: 32)
-                        .background(math.isToday(day) ? GoogleCalendarColors.accent : Color.clear, in: Circle())
+                        .font(Theme.Font.dayNumberLarge)
+                        .foregroundStyle(math.isToday(day) ? Theme.onAccent : Theme.textPrimary)
+                        .frame(width: 40, height: 40)
+                        .background(math.isToday(day) ? Theme.accent : Color.clear, in: Circle())
                 }
                 .frame(maxWidth: .infinity)
-                .padding(.vertical, 6)
+                .padding(.vertical, Theme.Spacing.s)
             }
         }
+        .background(Theme.background)
     }
 
     private var hourRows: some View {
@@ -61,16 +63,25 @@ struct TimeGridView: View {
             ForEach(0 ..< 24, id: \.self) { hour in
                 HStack(alignment: .top, spacing: 0) {
                     Text(math.hourLabel(hour))
-                        .font(.caption2)
-                        .foregroundStyle(.secondary)
+                        .font(Theme.Font.hourLabel)
+                        .foregroundStyle(Theme.textSecondary)
                         .frame(width: gutterWidth, alignment: .trailing)
-                        .padding(.trailing, 6)
-                        .offset(y: -6)
+                        .padding(.trailing, Theme.Spacing.s)
+                        .offset(y: -5)
                     ForEach(days, id: \.self) { day in
                         Rectangle()
-                            .fill(math.isToday(day) ? GoogleCalendarColors.todayColumn : Color.clear)
+                            .fill(math.isToday(day) ? Theme.todayColumn : Color.clear)
                             .frame(maxWidth: .infinity, maxHeight: .infinity)
-                            .border(GoogleCalendarColors.gridLine, width: 0.5)
+                            .overlay(alignment: .top) {
+                                Rectangle()
+                                    .fill(Theme.gridLine)
+                                    .frame(height: 1)
+                            }
+                            .overlay(alignment: .leading) {
+                                Rectangle()
+                                    .fill(Theme.gridLine)
+                                    .frame(width: 1)
+                            }
                     }
                 }
                 .frame(height: hourHeight)
@@ -85,13 +96,13 @@ struct TimeGridView: View {
             HStack(spacing: 0) {
                 Color.clear.frame(width: gutterWidth)
                 Circle()
-                    .fill(GoogleCalendarColors.nowIndicator)
-                    .frame(width: 8, height: 8)
+                    .fill(Theme.nowIndicator)
+                    .frame(width: 10, height: 10)
                 Rectangle()
-                    .fill(GoogleCalendarColors.nowIndicator)
-                    .frame(height: 1)
+                    .fill(Theme.nowIndicator)
+                    .frame(height: 2)
             }
-            .offset(y: CGFloat(math.fractionOfDay(for: Date())) * hourHeight * 24 - 4)
+            .offset(y: CGFloat(math.fractionOfDay(for: Date())) * hourHeight * 24 - 5)
         }
     }
 }

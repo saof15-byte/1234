@@ -51,49 +51,39 @@ struct ContentView: View {
     }
 }
 
-/// Calendarios de ejemplo para ver la forma de la barra lateral. Se reemplazan
-/// por los calendarios reales de cada cuenta en la Fase 3.
-private struct CalendarSource: Identifiable {
-    let id = UUID()
-    let name: String
-    let color: Color
-}
-
 private struct SidebarView: View {
     @Binding var anchor: Date
     let math: CalendarMath
 
-    private let sources = [
-        CalendarSource(name: "Personal", color: GoogleCalendarColors.eventPalette[5]),
-        CalendarSource(name: "Trabajo", color: GoogleCalendarColors.eventPalette[3]),
-        CalendarSource(name: "Tareas", color: GoogleCalendarColors.eventPalette[2]),
-    ]
-
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
             MiniMonthView(anchor: $anchor, math: math)
-                .padding(12)
+                .padding(Theme.Spacing.m)
             Divider()
-            List {
-                Section("Cuentas") {
-                    Text("Sin cuentas conectadas")
-                        .font(.callout)
-                        .foregroundStyle(.secondary)
-                }
-                Section("Mis calendarios") {
-                    ForEach(sources) { source in
-                        Label {
-                            Text(source.name)
-                        } icon: {
-                            Circle()
-                                .fill(source.color)
-                                .frame(width: 10, height: 10)
-                        }
-                    }
-                }
-            }
-            .listStyle(.sidebar)
+            calendarsSection
+            Spacer(minLength: 0)
         }
+    }
+
+    /// Todavía no hay cuentas conectadas, así que en vez de calendarios de
+    /// mentira la barra lateral explica qué falta. La lista real llega con la
+    /// Fase 3 (ver docs/ROADMAP.md).
+    private var calendarsSection: some View {
+        VStack(alignment: .leading, spacing: Theme.Spacing.s) {
+            Text("Mis calendarios")
+                .font(Theme.Font.sidebarTitle)
+                .foregroundStyle(Theme.textPrimary)
+
+            HStack(alignment: .top, spacing: Theme.Spacing.s) {
+                Image(systemName: "calendar.badge.plus")
+                    .foregroundStyle(Theme.textSecondary)
+                Text("Conecta una cuenta de Google o Microsoft para ver tus calendarios aquí.")
+                    .font(Theme.Font.sidebarBody)
+                    .foregroundStyle(Theme.textSecondary)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+        }
+        .padding(Theme.Spacing.m)
     }
 }
 
