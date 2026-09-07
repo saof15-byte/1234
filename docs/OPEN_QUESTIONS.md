@@ -8,6 +8,8 @@ Decisiones e información que necesito de ti antes de arrancar con código (Fase
 
 **Respuesta:** Build local gratis con Xcode. Sin cuenta de Developer Program por ahora.
 
+**Corrección:** lo del "re-firmar cada 7 días" es una limitación de **iOS**, no de macOS. Una app de Mac firmada ad-hoc (`CODE_SIGN_IDENTITY = "-"`, que es como está configurado el proyecto) corre en tu propio Mac indefinidamente, sin cuenta de Apple de ningún tipo. La cuenta paga solo haría falta para distribuirla a otras personas.
+
 ## 2. Versión mínima de macOS a soportar
 
 ¿Qué versión de macOS tienes en tu Mac actualmente? (Se ve en  → Acerca de este Mac). Define qué versión mínima soporta la app y qué APIs de SwiftUI/SwiftData podemos usar.
@@ -26,8 +28,6 @@ Es prácticamente gratis en esfuerzo (EventKit, sin OAuth) y te dejaría *todo* 
 
 **Respuesta:** No tienes ninguno. Guía paso a paso para Google en [guides/GOOGLE_CLOUD_SETUP.md](guides/GOOGLE_CLOUD_SETUP.md) (la de Azure la damos en la Fase 4, cuando toque integrar Microsoft, para no hacerte reunir credenciales que se van a quedar sin usar semanas).
 
-## 5. Nombre de la app y bundle id (menor, se puede definir después)
+## 5. Nombre de la app y bundle id
 
-Un nombre de trabajo y un bundle id (ej. `com.tunombre.calendario`) para configurar el proyecto Xcode.
-
-**Respuesta:** _pendiente_
+**Respuesta provisional:** nombre de trabajo `UnifiedCalendar`, bundle id `com.saof15.unifiedcalendar`. Se puede cambiar, pero conviene decidirlo antes de crear el Client ID de Google (paso 5 de la [guía](guides/GOOGLE_CLOUD_SETUP.md)), porque ese Client ID queda amarrado al bundle id.

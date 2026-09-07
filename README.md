@@ -6,10 +6,10 @@ Estado actual: Fase 2 — vistas de día/semana/mes funcionando con fechas reale
 
 ## Cómo correrlo
 
-1. Abre `Package.swift` con Xcode (doble click, o `xed .` desde la carpeta del repo en tu Mac).
-2. Selecciona el esquema `UnifiedCalendar` y dale Run (⌘R).
+1. Abre `UnifiedCalendar.xcodeproj` con Xcode (doble click).
+2. Dale Run (⌘R).
 
-No requiere cuenta de Apple Developer para esto — con tu Apple ID gratuito alcanza (hay que volver a firmar cada 7 días, ver [docs/OPEN_QUESTIONS.md](docs/OPEN_QUESTIONS.md)).
+No requiere cuenta de Apple Developer ni Apple ID: el proyecto usa firma ad-hoc (`CODE_SIGN_IDENTITY = "-"`), que en macOS deja correr la app en tu propio Mac indefinidamente.
 
 ## Cómo vamos a trabajar
 

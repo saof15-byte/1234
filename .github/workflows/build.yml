@@ -9,5 +9,17 @@ jobs:
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v4
-      - run: swift --version
-      - run: swift build
+      - run: xcodebuild -version
+      - name: Build
+        run: |
+          xcodebuild \
+            -project UnifiedCalendar.xcodeproj \
+            -scheme UnifiedCalendar \
+            -destination 'platform=macOS' \
+            -configuration Debug \
+            build
+      - name: Check the app bundle has an identifier
+        run: |
+          APP=$(find ~/Library/Developer/Xcode/DerivedData -name 'UnifiedCalendar.app' -type d | head -1)
+          echo "App bundle: $APP"
+          /usr/libexec/PlistBuddy -c 'Print :CFBundleIdentifier' "$APP/Contents/Info.plist"
